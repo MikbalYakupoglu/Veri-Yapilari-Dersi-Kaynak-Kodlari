@@ -2,10 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
 #define LENGHT 5
-
 
 typedef struct Yolcu{
   int koltuk_no;
@@ -23,7 +20,7 @@ Otobus* ilkOtobus = NULL;
 
 int isFull(int t)
 {
-    if(t < LENGHT -1)
+    if(t < LENGHT)
     {
         return -1;
     }
@@ -37,7 +34,7 @@ int isFull(int t)
 
 int isEmpty(int t)
 {
-    if(t < 0)
+    if(t < 1)
     {
         printf("\nStack is Empty.");
         return 1;
@@ -49,26 +46,7 @@ void push(Yolcu* array, Yolcu yolcu, int *t)
 {
     if(isFull(*t) == -1)
     {
-        (*t)++;
         array[*t] = yolcu;
-
-    }
-}
-
-void pop(Yolcu* array, int* t)
-{
-    if(isEmpty(*t) == 0)
-    {
-        // printf("\nCikarilan Eleman = %d\n", array[*t]);
-        (*t)--;
-    }
-}
-
-Yolcu top(Yolcu* array, int t)
-{
-    if(isEmpty(t) == 0)
-    {
-        return array[t];
     }
 }
 
@@ -82,23 +60,6 @@ void printStack(Yolcu* array, int t)
             printf("\n%d nolu yolcu - Yolcu Adi : %s   -  Yolcu Soyadi : %s ", array[i].koltuk_no, array[i].ad, array[i].soyad);
         }
     }
-}
-
-
-void PrintList()
-{
-    if(ilkOtobus == NULL){
-        printf("Liste Bos");
-        return;
-    }
-
-    Otobus* temp;
-    temp = ilkOtobus;
-    while(temp != NULL)
-    {
-        // printf("%d ==> ", temp-> Yolcular); Yolcular tek tek yazılacak
-        temp = temp->sonrakiOtobus;
-    }    
 }
 
 void OtobusEkle()
@@ -120,12 +81,10 @@ void OtobusEkle()
         }
         p->sonrakiOtobus = temp;
     } 
-
-    temp->Yolcular[0].koltuk_no = 123;
-
 }
 
-int LengthList(){
+int LengthList()
+{
     int count = 0;
     if(ilkOtobus == NULL)
         return count;
@@ -163,24 +122,20 @@ void YolcuEkle(int* mevcutOtobus, int* mevcutYolcu)
         OtobusEkle();
     }
 
-    char ad[50];
-    char soyad[50];
-
-
+    Yolcu eklenecekYolcu;
     Otobus* otobus = sonOtobus();    
 
-    otobus->Yolcular[*mevcutYolcu].koltuk_no = (*mevcutYolcu) + 1;
+    eklenecekYolcu.koltuk_no = (*mevcutYolcu) + 1;
+    
     printf("%d. Otobus %d. Yolcu = \n",(*mevcutOtobus) + 1, (*mevcutYolcu) + 1);
 
     printf("Yolcu Adini Giriniz : ");
-    scanf("%s", ad);
-    strncpy(otobus->Yolcular[*mevcutYolcu].ad, ad,50);
-
+    scanf("%s", eklenecekYolcu.ad);
 
     printf("Yolcu Soyadini Giriniz : ");
-    scanf("%s", soyad);
-    strncpy(otobus->Yolcular[*mevcutYolcu].soyad, soyad,50);
+    scanf("%s", eklenecekYolcu.soyad);  
 
+    push(otobus->Yolcular, eklenecekYolcu, mevcutYolcu);
 
     (*mevcutYolcu) += 1;
     otobus->kapasite = (*mevcutYolcu);
@@ -297,21 +252,6 @@ int main()
             break;
         }
     }
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return 0;
 }
