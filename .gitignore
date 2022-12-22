@@ -1,0 +1,8 @@
+*.exe
+*.pdf
+*.zip
+*.docx
+.vscode
+VeriYapilariToplu.c
+homework-1.c
+VeriYapilariVizeCevap.c
