@@ -4,19 +4,19 @@
 
 #define LENGHT 5
 
-typedef struct Yolcu{
+struct Yolcu{
   int koltuk_no;
   char ad[50];
   char soyad[50];
-} Yolcu;
+};
 
-typedef struct Otobus{
+struct Otobus{
   int kapasite;
-  Yolcu Yolcular[LENGHT];
+  struct Yolcu Yolcular[LENGHT];
   struct Otobus* sonrakiOtobus;
-} Otobus;
+};
 
-Otobus* ilkOtobus = NULL;
+struct Otobus* ilkOtobus = NULL;
 
 int isFull(int t)
 {
@@ -42,7 +42,7 @@ int isEmpty(int t)
     return 0;
 }
 
-void push(Yolcu* array, Yolcu yolcu, int *t)
+void push(struct Yolcu* array,struct Yolcu yolcu, int *t)
 {
     if(isFull(*t) == -1)
     {
@@ -50,7 +50,7 @@ void push(Yolcu* array, Yolcu yolcu, int *t)
     }
 }
 
-void printStack(Yolcu* array, int t)
+void printStack(struct Yolcu* array, int t)
 {
     int tempT = t - 1;
     if(isEmpty(t) == 0)
@@ -64,8 +64,8 @@ void printStack(Yolcu* array, int t)
 
 void OtobusEkle()
 {
-    Otobus* temp = NULL;
-    temp = (Otobus*)malloc(sizeof(Otobus)); //  + LENGHT * sizeof(Yolcu*)
+    struct Otobus* temp = NULL;
+    temp = (struct Otobus*)malloc(sizeof(struct Otobus)); //  + LENGHT * sizeof(Yolcu*)
     temp->kapasite = 0;
     temp->sonrakiOtobus = NULL;
 
@@ -74,7 +74,7 @@ void OtobusEkle()
         ilkOtobus = temp;
     }
     else{
-        Otobus* p;
+        struct Otobus* p;
         p = ilkOtobus;
         while(p->sonrakiOtobus != NULL){
             p = p->sonrakiOtobus;
@@ -89,7 +89,7 @@ int LengthList()
     if(ilkOtobus == NULL)
         return count;
 
-    Otobus* temp;
+    struct Otobus* temp;
     temp = ilkOtobus;
     while(temp != NULL){
         temp = temp->sonrakiOtobus;
@@ -98,9 +98,9 @@ int LengthList()
     return count;
 }
 
-Otobus* sonOtobus()
+struct Otobus* sonOtobus()
 {
-    Otobus* p;
+    struct Otobus* p;
     p = ilkOtobus;
     while(p->sonrakiOtobus != NULL){
         p = p->sonrakiOtobus;   
@@ -122,8 +122,8 @@ void YolcuEkle(int* mevcutOtobus, int* mevcutYolcu)
         OtobusEkle();
     }
 
-    Yolcu eklenecekYolcu;
-    Otobus* otobus = sonOtobus();    
+    struct Yolcu eklenecekYolcu;
+    struct Otobus* otobus = sonOtobus();    
 
     eklenecekYolcu.koltuk_no = (*mevcutYolcu) + 1;
     
@@ -155,7 +155,7 @@ void YolculariYaz(int* mevcutYolcu)
     }
 
     int i = 1;
-    Otobus* temp;
+    struct Otobus* temp;
     temp = ilkOtobus;
     while(temp != NULL)
     {
@@ -168,51 +168,6 @@ void YolculariYaz(int* mevcutYolcu)
     }
 }
 
-void SecilenOtobusunYolculariniYazdir()
-{
-    int count = 1;
-    int lenght = LengthList();
-    int n;
-    printf("\nYolcularini Istediginiz Otobusu Seciniz : ");
-    scanf("%d",&n);
-    if(n < 1){
-        printf("\nGecersiz Deger");
-        return;
-    }
-    if(n > lenght){
-        printf("\nSecilen Otobus Bulunamadi.");
-        return;
-    }
-
-    Otobus* p = ilkOtobus;
-    while(count < n){
-        if(p->sonrakiOtobus == NULL)
-        {
-            printf("Secilen Otobus Bulunamadi.");
-            return;
-        }
-        p = p->sonrakiOtobus;
-        count++;
-    }
-    
-    printf("\n\n%d. Otobus", n);        
-    printf("---------------------------------------");
-    printStack(p->Yolcular, p->kapasite);
-}
-
-void KapasiteHesapla()
-{
-    int kapasite = 25;
-
-    Otobus* p = ilkOtobus;
-    while (p != NULL)
-    {
-        kapasite -= p->kapasite;
-        p = p->sonrakiOtobus;
-    }
-
-    printf("\nKalan Kapasite : %d", kapasite);
-}
 
 int main()
 {
@@ -222,7 +177,7 @@ int main()
     int secim;
     while(1)
     {
-        printf("\n\n1- Yolcu Ekle\n2- Mevcut Yolculari Yazdir\n3- Otobuse Gore Yolculari Yazdir\n4- Kalan Kontenjani Hesapla\n0- Cikis\nSeciminizi Yapiniz : ");
+        printf("\n\n1- Yolcu Ekle\n2- Mevcut Yolculari Yazdir\n0- Cikis\nSeciminizi Yapiniz : ");
         scanf("%d", &secim);
 
         switch (secim)
@@ -233,14 +188,6 @@ int main()
 
         case 2:
             YolculariYaz(&mevcutYolcu);
-            break;
-
-        case 3:
-            SecilenOtobusunYolculariniYazdir();
-            break;
-
-        case 4:
-            KapasiteHesapla();
             break;
 
         case 0:
