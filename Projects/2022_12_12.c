@@ -64,7 +64,7 @@ int LengthList()
     return count;
 }
 
-void OtobusEkle()
+void AddNode()
 {
     struct Node* temp = NULL;
     temp = (struct Node*)malloc(sizeof(struct Node));
@@ -141,7 +141,7 @@ int main()
         switch (secim)
         {
         case 1:
-            OtobusEkle();
+            AddNode();
             break;
 
         case 2:
