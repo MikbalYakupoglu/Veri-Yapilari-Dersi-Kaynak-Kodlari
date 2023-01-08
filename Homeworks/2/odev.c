@@ -4,19 +4,19 @@
 
 #define LENGHT 5
 
-struct Yolcu{
+typedef struct Yolcu{
   int koltuk_no;
   char ad[50];
   char soyad[50];
-};
+} Yolcu;
 
-struct Otobus{
+typedef struct Otobus{
   int kapasite;
-  struct Yolcu Yolcular[LENGHT];
+  Yolcu Yolcular[LENGHT];
   struct Otobus* sonrakiOtobus;
-};
+} Otobus;
 
-struct Otobus* ilkOtobus = NULL;
+Otobus* ilkOtobus = NULL;
 
 int isFull(int t)
 {
@@ -42,7 +42,7 @@ int isEmpty(int t)
     return 0;
 }
 
-void push(struct Yolcu* array,struct Yolcu yolcu, int *t)
+void push(Yolcu* array, Yolcu yolcu, int *t)
 {
     if(isFull(*t) == -1)
     {
@@ -50,7 +50,7 @@ void push(struct Yolcu* array,struct Yolcu yolcu, int *t)
     }
 }
 
-void printStack(struct Yolcu* array, int t)
+void printStack(Yolcu* array, int t)
 {
     int tempT = t - 1;
     if(isEmpty(t) == 0)
@@ -64,8 +64,8 @@ void printStack(struct Yolcu* array, int t)
 
 void OtobusEkle()
 {
-    struct Otobus* temp = NULL;
-    temp = (struct Otobus*)malloc(sizeof(struct Otobus)); //  + LENGHT * sizeof(Yolcu*)
+    Otobus* temp = NULL;
+    temp = (Otobus*)malloc(sizeof(Otobus)); //  + LENGHT * sizeof(Yolcu*)
     temp->kapasite = 0;
     temp->sonrakiOtobus = NULL;
 
@@ -74,7 +74,7 @@ void OtobusEkle()
         ilkOtobus = temp;
     }
     else{
-        struct Otobus* p;
+        Otobus* p;
         p = ilkOtobus;
         while(p->sonrakiOtobus != NULL){
             p = p->sonrakiOtobus;
@@ -89,7 +89,7 @@ int LengthList()
     if(ilkOtobus == NULL)
         return count;
 
-    struct Otobus* temp;
+    Otobus* temp;
     temp = ilkOtobus;
     while(temp != NULL){
         temp = temp->sonrakiOtobus;
@@ -98,9 +98,9 @@ int LengthList()
     return count;
 }
 
-struct Otobus* sonOtobus()
+Otobus* sonOtobus()
 {
-    struct Otobus* p;
+    Otobus* p;
     p = ilkOtobus;
     while(p->sonrakiOtobus != NULL){
         p = p->sonrakiOtobus;   
@@ -122,8 +122,8 @@ void YolcuEkle(int* mevcutOtobus, int* mevcutYolcu)
         OtobusEkle();
     }
 
-    struct Yolcu eklenecekYolcu;
-    struct Otobus* otobus = sonOtobus();    
+    Yolcu eklenecekYolcu;
+    Otobus* otobus = sonOtobus();    
 
     eklenecekYolcu.koltuk_no = (*mevcutYolcu) + 1;
     
@@ -155,7 +155,7 @@ void YolculariYaz(int* mevcutYolcu)
     }
 
     int i = 1;
-    struct Otobus* temp;
+    Otobus* temp;
     temp = ilkOtobus;
     while(temp != NULL)
     {
@@ -168,6 +168,53 @@ void YolculariYaz(int* mevcutYolcu)
     }
 }
 
+    // Zorunlu Değil
+void SecilenOtobusunYolculariniYazdir()
+{
+    int count = 1;
+    int lenght = LengthList();
+    int n;
+    printf("\nYolcularini Istediginiz Otobusu Seciniz : ");
+    scanf("%d",&n);
+    if(n < 1){
+        printf("\nGecersiz Deger");
+        return;
+    }
+    if(n > lenght){
+        printf("\nSecilen Otobus Bulunamadi.");
+        return;
+    }
+
+    Otobus* p = ilkOtobus;
+    while(count < n){
+        if(p->sonrakiOtobus == NULL)
+        {
+            printf("Secilen Otobus Bulunamadi.");
+            return;
+        }
+        p = p->sonrakiOtobus;
+        count++;
+    }
+    
+    printf("\n\n%d. Otobus", n);        
+    printf("---------------------------------------");
+    printStack(p->Yolcular, p->kapasite);
+}
+
+    // Zorunlu Değil
+void KapasiteHesapla()
+{
+    int kapasite = 25;
+
+    Otobus* p = ilkOtobus;
+    while (p != NULL)
+    {
+        kapasite -= p->kapasite;
+        p = p->sonrakiOtobus;
+    }
+
+    printf("\nKalan Kapasite : %d", kapasite);
+}
 
 int main()
 {
@@ -177,7 +224,7 @@ int main()
     int secim;
     while(1)
     {
-        printf("\n\n1- Yolcu Ekle\n2- Mevcut Yolculari Yazdir\n0- Cikis\nSeciminizi Yapiniz : ");
+        printf("\n\n1- Yolcu Ekle\n2- Mevcut Yolculari Yazdir\n3- Otobuse Gore Yolculari Yazdir\n4- Kalan Kontenjani Hesapla\n0- Cikis\nSeciminizi Yapiniz : ");
         scanf("%d", &secim);
 
         switch (secim)
@@ -188,6 +235,14 @@ int main()
 
         case 2:
             YolculariYaz(&mevcutYolcu);
+            break;
+
+        case 3:
+            SecilenOtobusunYolculariniYazdir();
+            break;
+
+        case 4:
+            KapasiteHesapla();
             break;
 
         case 0:
