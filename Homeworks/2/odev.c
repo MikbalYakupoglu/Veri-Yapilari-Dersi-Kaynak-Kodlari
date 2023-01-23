@@ -216,6 +216,17 @@ void KapasiteHesapla()
     printf("\nKalan Kapasite : %d", kapasite);
 }
 
+void freeMemorize()
+{
+    Otobus* p = ilkOtobus;
+    while (p != NULL)
+    {
+        printf("\n%p adresi temizlendi",p);
+        free(p);
+        p = p->sonrakiOtobus;
+    }
+}
+
 int main()
 {
     int mevcutOtobus = 0;
@@ -246,6 +257,8 @@ int main()
             break;
 
         case 0:
+            printf("\nProgram Sonlandirildi.");
+            freeMemorize();
             exit(0);
             break;
         
